@@ -14,19 +14,11 @@ export class UserResolver {
 
   @Query(returns => User)
   async user(@Args('login') login: string) {
-    const user = await this.userService.getUserByLogin(login)
-    if (!user) {
-      throw new NotFoundException(login)
-    }
-    return user
+    return await this.userService.getUserByLogin(login)
   }
 
   @Query(returns => User)
   async me() {
-    const user = await this.userService.getCurrentUser()
-    if (!user) {
-      throw new UnauthorizedException()
-    }
-    return user
+    return await this.userService.getCurrentUser()
   }
 }

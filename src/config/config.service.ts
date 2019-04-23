@@ -11,4 +11,13 @@ export class ConfigService {
   get(key: string): string {
     return this.envConfig[key]
   }
+
+  setRequestHeader() {
+    return {
+      headers: {
+        'X-Auth-Token': this.get('YUQUE_API_TOKEN'),
+        'content-type': 'application/json',
+      },
+    }
+  }
 }

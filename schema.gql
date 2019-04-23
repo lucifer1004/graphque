@@ -3,15 +3,50 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input CreateGroupInput {
+  name: String!
+  login: String!
+  description: String!
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
 
+type Group {
+  id: ID!
+  type: String!
+  space_id: ID!
+  owner_id: ID!
+  login: String!
+  name: String!
+  description: String
+  avatar_url: String!
+  large_avatar_url: String!
+  medium_avatar_url: String!
+  small_avatar_url: String!
+  books_count: Int!
+  public_books_count: Int!
+  topics_count: Int!
+  public_topics_count: Int!
+  members_count: Int!
+  public: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  _serializer: String!
+}
+
+type Mutation {
+  createGroup(newGroup: CreateGroupInput!): Group!
+}
+
 type Query {
   hello: String!
   user(login: String!): User!
   me: User!
+  groups(login: String!): [Group!]!
+  allGroups: [Group!]!
 }
 
 type User {

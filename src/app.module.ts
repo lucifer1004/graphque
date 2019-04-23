@@ -4,6 +4,7 @@ import {AppController} from './app.controller'
 import {AppService} from './app.service'
 import {ConfigModule} from './config/config.module'
 import {UserModule} from './user/user.module'
+import {GroupModule} from './group/group.module'
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import {UserModule} from './user/user.module'
       installSubscriptionHandlers: true,
     }),
     UserModule,
+    GroupModule,
   ],
   controllers: [AppController],
   providers: [AppService],
