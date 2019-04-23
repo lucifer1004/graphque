@@ -27,6 +27,7 @@
     "@types/graphql": "^14.2.0",
     "apollo-engine": "^1.1.2",
     "apollo-server-express": "^2.4.8",
+    "dotenv": "^7.0.0",
     "graphql": "^14.2.1",
     "graphql-tools": "^4.0.4",
     "reflect-metadata": "^0.1.13",

@@ -1,4 +1,5 @@
-import {Resolver, Query, Arg} from 'type-graphql'
+import {NotFoundException} from '@nestjs/common'
+import {Args, Query, Resolver} from '@nestjs/graphql'
 import {User} from './user.entity'
 import {UserService} from './user.service'
 
@@ -6,8 +7,17 @@ import {UserService} from './user.service'
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Query(returns => User, {nullable: true})
-  async user(@Arg('login') login: string): Promise<User> {
-    return await this.userService.getUserByLogin(login)
+  @Query(returns => String)
+  async hello() {
+    return 'Hello GraphQL'
+  }
+
+  @Query(returns => User)
+  async user(@Args('login') login: string) {
+    const user = await this.userService.getUserByLogin(login)
+    if (!user) {
+      throw new NotFoundException(login)
+    }
+    return user
   }
 }

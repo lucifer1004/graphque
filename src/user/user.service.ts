@@ -1,13 +1,16 @@
 import {HttpService, Injectable} from '@nestjs/common'
-import {User} from './user.entity'
 import {AxiosResponse} from 'axios'
+import * as dotenv from 'dotenv'
+import {map} from 'rxjs/operators'
+import {YUQUE_BASE_URL} from '../common/constants'
+import {YuqueUserData} from '../interfaces/yuque.interface'
 
-const baseUrl = 'https://www.yuque.com/api/v2'
+dotenv.config()
+const baseUrl = YUQUE_BASE_URL
 const httpConfig = {
   headers: {
-    common: {
-      'X-Auth-Token': '6s2xfDom6CRy5czH5mpyS0xQ3xuQgTBTP9KOIcYr',
-    },
+    'X-Auth-Token': process.env.YUQUE_API_TOKEN,
+    'content-type': 'application/json',
   },
 }
 
@@ -15,23 +18,9 @@ const httpConfig = {
 export class UserService {
   constructor(private readonly httpService: HttpService) {}
 
-  async getUserByLogin(login): Promise<User> {
-    let user: User
-    // await axios
-    //   .get(`${baseUrl}/users/${login}`, httpConfig)
-    //   .then(res => console.log(res))
-    //   .catch(err => console.log(err))
-    await this.httpService
+  async getUserByLogin(login: string) {
+    return await this.httpService
       .get(`${baseUrl}/users/${login}`, httpConfig)
-      .subscribe({
-        next: (res: AxiosResponse<User>) => {
-          console.log(res)
-          user = res.data
-        },
-        error: err => {
-          console.error(err)
-        },
-      })
-    return user
+      .pipe(map((res: AxiosResponse<YuqueUserData>) => res.data.data))
   }
 }
