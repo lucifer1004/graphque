@@ -16,10 +16,21 @@ type Query {
 type User {
   id: ID!
   type: String!
+  space_id: ID!
+  account_id: ID!
   login: String!
   name: String!
   description: String
   avatar_url: String!
+  large_avatar_url: String!
+  medium_avatar_url: String!
+  small_avatar_url: String!
+  books_count: Int!
+  public_books_count: Int!
+  followers_count: Int!
+  following_count: Int!
+  public: Int!
   created_at: DateTime!
   updated_at: DateTime!
+  _serializer: String!
 }

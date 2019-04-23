@@ -1,26 +1,31 @@
-import {HttpService, Injectable} from '@nestjs/common'
+import {HttpService, Injectable, Logger} from '@nestjs/common'
 import {AxiosResponse} from 'axios'
-import * as dotenv from 'dotenv'
 import {map} from 'rxjs/operators'
 import {YUQUE_BASE_URL} from '../common/constants'
+import {ConfigService} from '../config/config.service'
 import {YuqueUserData} from '../interfaces/yuque.interface'
-
-dotenv.config()
-const baseUrl = YUQUE_BASE_URL
-const httpConfig = {
-  headers: {
-    'X-Auth-Token': process.env.YUQUE_API_TOKEN,
-    'content-type': 'application/json',
-  },
-}
 
 @Injectable()
 export class UserService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly httpService: HttpService,
+  ) {}
 
   async getUserByLogin(login: string) {
+    const httpConfig = {
+      headers: {
+        'X-Auth-Token': this.configService.get('YUQUE_API_TOKEN'),
+        'content-type': 'application/json',
+      },
+    }
     return await this.httpService
-      .get(`${baseUrl}/users/${login}`, httpConfig)
-      .pipe(map((res: AxiosResponse<YuqueUserData>) => res.data.data))
+      .get(`${YUQUE_BASE_URL}/users/${login}`, httpConfig)
+      .pipe(
+        map((res: AxiosResponse<YuqueUserData>) => {
+          Logger.log(res.data)
+          return res.data.data
+        }),
+      )
   }
 }
