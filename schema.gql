@@ -11,6 +11,7 @@ scalar DateTime
 type Query {
   hello: String!
   user(login: String!): User!
+  me: User!
 }
 
 type User {

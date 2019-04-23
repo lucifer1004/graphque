@@ -1,4 +1,4 @@
-import {NotFoundException} from '@nestjs/common'
+import {NotFoundException, UnauthorizedException} from '@nestjs/common'
 import {Args, Query, Resolver} from '@nestjs/graphql'
 import {User} from './user.entity'
 import {UserService} from './user.service'
@@ -17,6 +17,15 @@ export class UserResolver {
     const user = await this.userService.getUserByLogin(login)
     if (!user) {
       throw new NotFoundException(login)
+    }
+    return user
+  }
+
+  @Query(returns => User)
+  async me() {
+    const user = await this.userService.getCurrentUser()
+    if (!user) {
+      throw new UnauthorizedException()
     }
     return user
   }
