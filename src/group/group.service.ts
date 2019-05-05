@@ -7,6 +7,7 @@ import {ConfigService} from '../config/config.service'
 import {Group} from './group.entity'
 import {YuqueGroupData, YuqueUserData} from '../interfaces/yuque.interface'
 import {CreateGroupInput} from './dto/createGroup.input'
+import {UpdateGroupInput} from './dto/updateGroup.input'
 
 @Injectable()
 export class GroupService {
@@ -15,16 +16,19 @@ export class GroupService {
     private readonly httpService: HttpService,
   ) {}
 
-  async getUserJoinedGroups(login: string) {
+  async getUserJoinedGroups(userLogin: string) {
     return await this.httpService
       .get(
-        `${YUQUE_BASE_URL}/users/${login}/groups`,
+        `${YUQUE_BASE_URL}/users/${userLogin}/groups`,
         this.configService.setRequestHeader(),
       )
       .pipe(
         map((res: AxiosResponse<YuqueGroupData>) => res.data.data),
         catchError(() => {
-          Logger.warn(`No groups found for user "${login}".`, 'GroupService')
+          Logger.warn(
+            `No groups found for user "${userLogin}".`,
+            'GroupService',
+          )
           return of(new Array<Group>())
         }),
       )
@@ -41,6 +45,46 @@ export class GroupService {
       .post(
         `${YUQUE_BASE_URL}/groups`,
         newGroup,
+        this.configService.setRequestHeader(),
+      )
+      .pipe(map((res: AxiosResponse<YuqueUserData>) => res.data.data))
+  }
+
+  async getGroup(groupLogin: string) {
+    return await this.httpService
+      .get(
+        `${YUQUE_BASE_URL}/groups/${groupLogin}`,
+        this.configService.setRequestHeader(),
+      )
+      .pipe(
+        map((res: AxiosResponse<YuqueGroupData>) => res.data.data),
+        catchError(() => {
+          Logger.warn(`Group ${groupLogin} is not found.`, 'GroupService')
+          return of(Group)
+        }),
+      )
+  }
+
+  async updateGroup(groupLogin: string, newGroup: UpdateGroupInput) {
+    return await this.httpService
+      .put(
+        `${YUQUE_BASE_URL}/groups/${groupLogin}`,
+        newGroup,
+        this.configService.setRequestHeader(),
+      )
+      .pipe(
+        map((res: AxiosResponse<YuqueGroupData>) => res.data.data),
+        catchError(() => {
+          Logger.warn(`Group ${groupLogin} is not found.`, 'GroupService')
+          return of(Group)
+        }),
+      )
+  }
+
+  async deleteGroup(groupLogin: string) {
+    return await this.httpService
+      .delete(
+        `${YUQUE_BASE_URL}/groups/${groupLogin}`,
         this.configService.setRequestHeader(),
       )
       .pipe(map((res: AxiosResponse<YuqueUserData>) => res.data.data))

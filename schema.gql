@@ -39,14 +39,23 @@ type Group {
 
 type Mutation {
   createGroup(newGroup: CreateGroupInput!): Group!
+  updateGroup(newGroup: UpdateGroupInput!, groupLogin: String!): Group!
+  deleteGroup(groupLogin: String!): Group!
 }
 
 type Query {
   hello: String!
   user(login: String!): User!
   me: User!
-  groups(login: String!): [Group!]!
+  group(groupLogin: String!): Group!
+  groups(userLogin: String!): [Group!]!
   allGroups: [Group!]!
+}
+
+input UpdateGroupInput {
+  name: String
+  login: String
+  description: String
 }
 
 type User {
